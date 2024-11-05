@@ -1,0 +1,64 @@
+{
+  "clientes": [
+    {
+      "id": 1,
+      "nome": "João Silva",
+      "cpf": "123.456.789-00",
+      "contato": "(11) 98765-4321",
+      "cep": "12345-678",
+      "cidade": "São Paulo",
+      "endereco": "Rua A, 123",
+      "observacoes": "Cliente regular",
+      "status": "Ativo",
+      "dataNascimento": "1985-07-20"
+    },
+    {
+      "id": 2,
+      "nome": "Maria Oliveira",
+      "cpf": "987.654.321-00",
+      "contato": "(21) 91234-5678",
+      "cep": "87654-321",
+      "cidade": "Rio de Janeiro",
+      "endereco": "Avenida B, 456",
+      "observacoes": "Cliente VIP",
+      "status": "Inativo",
+      "dataNascimento": "1990-03-15"
+    },
+    {
+      "id": 3,
+      "nome": "Carlos Andrade",
+      "cpf": "111.222.333-44",
+      "contato": "(31) 92345-6789",
+      "cep": "54321-098",
+      "cidade": "Belo Horizonte",
+      "endereco": "Travessa C, 789",
+      "observacoes": "Preferência por contato por email",
+      "status": "Ativo",
+      "dataNascimento": "1975-12-30"
+    },
+    {
+      "id": "96e6",
+      "nome": "",
+      "documento": "",
+      "contato": "",
+      "cep": "",
+      "cidade": "",
+      "endereco": "",
+      "observacoes": "",
+      "status": "",
+      "dataNascimento": ""
+    },
+    {
+      "id": "4fdc",
+      "nome": "Cristian",
+      "documento": "10328233994",
+      "contato": "49998203752",
+      "cep": "89868000",
+      "cidade": "Saudades",
+      "endereco": "Araçazinho",
+      "observacoes": "Teste",
+      "status": "Ativo",
+      "dataNascimento": "2002-04-11"
+    }
+  ]
+}

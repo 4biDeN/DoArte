@@ -7,7 +7,7 @@
         icon="add"
         label="Novo Cliente"
         color="primary"
-        @click="showForm = true"
+        @click="showDialog = true"
       />
       <div class="search-container">
         <q-input
@@ -34,47 +34,64 @@
       :pagination="pagination"
     />
 
-    <ClienteForm v-if="showForm" @close="showForm = false" />
-    <q-table
-      :rows="clients"
-      :columns="columns"
-      row-key="id"
-      class="client-table"
-      :style="{ backgroundColor: '#201f1c', color: '#ffffff' }"
-      v-model:pagination="pagination"
-    />
+    <!-- Modal para o formulário de cadastro -->
+    <q-dialog v-model="showDialog" persistent>
+      <q-card class="client-form">
+        <q-card-section>
+          <h2>Cadastrar Cliente</h2>
+          <q-input v-model="formData.nome" label="Nome" />
+          <q-input v-model="formData.documento" label="Documento (CPF)" />
+          <q-input v-model="formData.contato" label="Contato" />
+          <q-input v-model="formData.cep" label="CEP" />
+          <q-input v-model="formData.cidade" label="Cidade" />
+          <q-input v-model="formData.endereco" label="Endereço" />
+          <q-input v-model="formData.observacoes" label="Observações" />
+
+          <div class="status-nascimento">
+            <q-input v-model="formData.status" label="Status" />
+            <q-input
+              v-model="formData.dataNascimento"
+              label="Data de Nascimento"
+              type="date"
+            />
+          </div>
+
+          <div class="buttons">
+            <q-btn label="Salvar" color="primary" @click="saveClient" />
+            <q-btn
+              label="Cancelar"
+              color="secondary"
+              @click="showDialog = false"
+            />
+          </div>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import ClienteForm from "./ClienteForm.vue";
+import { ref, onMounted } from "vue";
+import axios from "axios";
 
+const showDialog = ref(false); // Controla a visibilidade do modal
 const search = ref("");
 const pagination = ref({ page: 1, rowsPerPage: 5 });
-const showForm = ref(false);
+const clients = ref([]); // Lista de clientes
+const formData = ref({
+  nome: "",
+  documento: "",
+  contato: "",
+  cep: "",
+  cidade: "",
+  endereco: "",
+  observacoes: "",
+  status: "",
+  dataNascimento: "",
+});
 
-const clients = ref([
-  {
-    id: 1,
-    codigo: "001",
-    nome: "Cliente A",
-    documento: "123",
-    telefone: "123456789",
-    status: "Ativo",
-    dias: "10",
-  },
-  // Adicionar mais clientes aqui...
-]);
-
+// Configura as colunas para exibição
 const columns = [
-  {
-    name: "codigo",
-    required: true,
-    label: "Código",
-    align: "left",
-    field: (row) => row.codigo,
-  },
   { name: "nome", label: "Nome", align: "left", field: (row) => row.nome },
   {
     name: "documento",
@@ -83,10 +100,10 @@ const columns = [
     field: (row) => row.documento,
   },
   {
-    name: "telefone",
+    name: "contato",
     label: "Telefone",
     align: "left",
-    field: (row) => row.telefone,
+    field: (row) => row.contato,
   },
   {
     name: "status",
@@ -95,16 +112,57 @@ const columns = [
     field: (row) => row.status,
   },
   {
-    name: "dias",
-    label: "Dias s/ Comprar",
+    name: "dataNascimento",
+    label: "Data de Nascimento",
     align: "left",
-    field: (row) => row.dias,
+    field: (row) => row.dataNascimento,
   },
 ];
 
-const performSearch = () => {
-  // Implementar lógica de busca aqui
+// Função para buscar os clientes do servidor
+const fetchClients = async () => {
+  try {
+    const response = await axios.get("http://localhost:3000/clientes");
+    clients.value = response.data;
+  } catch (error) {
+    console.error("Erro ao buscar clientes:", error);
+  }
 };
+
+// Função para salvar o cliente no JSON-Server
+const saveClient = async () => {
+  try {
+    await axios.post("http://localhost:3000/clientes", formData.value);
+    showDialog.value = false; // Fecha o modal
+    resetForm(); // Limpa o formulário
+    fetchClients(); // Atualiza a lista de clientes após salvar
+  } catch (error) {
+    console.error("Erro ao salvar o cliente:", error);
+  }
+};
+
+// Função para limpar o formulário após salvar
+const resetForm = () => {
+  formData.value = {
+    nome: "",
+    documento: "",
+    contato: "",
+    cep: "",
+    cidade: "",
+    endereco: "",
+    observacoes: "",
+    status: "",
+    dataNascimento: "",
+  };
+};
+
+// Função de busca (a ser implementada)
+const performSearch = () => {
+  // Implementar lógica de busca
+};
+
+// Chama fetchClients ao montar o componente
+onMounted(fetchClients);
 </script>
 
 <style scoped>
@@ -134,17 +192,28 @@ const performSearch = () => {
 }
 
 .search-button {
-  height: 40px; /* Ajuste a altura do botão para maior visibilidade */
+  height: 40px;
 }
 
 .client-table {
   background-color: #201f1c;
   color: #ffffff;
-  flex-grow: 1; /* Faz a tabela ocupar o espaço restante */
+  flex-grow: 1;
 }
 
 .client-table th,
 .client-table td {
-  color: #ffffff; /* Cor do texto da tabela */
+  color: #ffffff;
+}
+
+.status-nascimento {
+  display: flex;
+  justify-content: space-between;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 </style>
