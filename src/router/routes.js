@@ -14,6 +14,22 @@ const routes = [
     ],
   },
   {
+    path: "/financeiro",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "receber",
+        component: () => import("src/pages/FinanceiroReceberPage.vue"),
+        name: "FinanceiroReceber",
+      },
+      {
+        path: "pagar",
+        component: () => import("src/pages/FinanceiroPagarPage.vue"),
+        name: "FinanceiroPagar",
+      },
+    ],
+  },
+  {
     path: "/login",
     component: () => import("pages/loginPage.vue"),
   },

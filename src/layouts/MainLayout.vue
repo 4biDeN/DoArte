@@ -32,7 +32,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item clickable v-ripple tag="router-link" to="/financeiro">
+        <q-item clickable v-ripple tag="router-link" to="/financeiro/receber">
           <q-item-section>
             <q-btn flat label="FINANCEIRO" class="q-mb-md" />
           </q-item-section>

@@ -1,19 +1,19 @@
 {
   "clientes": [
     {
-      "id": 1,
+      "id": "1",
       "nome": "João Silva",
       "cpf": "123.456.789-00",
       "contato": "(11) 98765-4321",
       "cep": "12345-678",
       "cidade": "São Paulo",
       "endereco": "Rua A, 123",
-      "observacoes": "Cliente regular",
+      "observacoes": "Cliente",
       "status": "Ativo",
       "dataNascimento": "1985-07-20"
     },
     {
-      "id": 2,
+      "id": "2",
       "nome": "Maria Oliveira",
       "cpf": "987.654.321-00",
       "contato": "(21) 91234-5678",
@@ -25,7 +25,7 @@
       "dataNascimento": "1990-03-15"
     },
     {
-      "id": 3,
+      "id": "3",
       "nome": "Carlos Andrade",
       "cpf": "111.222.333-44",
       "contato": "(31) 92345-6789",
@@ -37,21 +37,9 @@
       "dataNascimento": "1975-12-30"
     },
     {
-      "id": "96e6",
-      "nome": "",
-      "documento": "",
-      "contato": "",
-      "cep": "",
-      "cidade": "",
-      "endereco": "",
-      "observacoes": "",
-      "status": "",
-      "dataNascimento": ""
-    },
-    {
-      "id": "4fdc",
+      "id": "4",
       "nome": "Cristian",
-      "documento": "10328233994",
+      "cpf": "10328233994",
       "contato": "49998203752",
       "cep": "89868000",
       "cidade": "Saudades",
@@ -59,6 +47,104 @@
       "observacoes": "Teste",
       "status": "Ativo",
       "dataNascimento": "2002-04-11"
+    }
+  ],
+  "receivables": [
+    {
+      "id": "1",
+      "cliente": "João Silva",
+      "emissao": "2024-11-01",
+      "pagamento": "2024-11-10",
+      "vencimento": "2024-11-15",
+      "valorOriginal": "500",
+      "valorPago": "0",
+      "tipoPagamento": "Boleto"
+    },
+    {
+      "id": "2",
+      "cliente": "Maria Oliveira",
+      "emissao": "2024-10-15",
+      "pagamento": "2024-10-20",
+      "vencimento": "2024-11-01",
+      "valorOriginal": "750",
+      "valorPago": "0",
+      "tipoPagamento": "Cartão de Crédito"
+    },
+    {
+      "id": "3",
+      "cliente": "Carlos Andrade",
+      "emissao": "2024-09-10",
+      "pagamento": "2024-09-12",
+      "vencimento": "2024-09-20",
+      "valorOriginal": "1000",
+      "valorPago": "1000",
+      "tipoPagamento": "Transferência Bancária"
+    },
+    {
+      "id": "4",
+      "cliente": "Cristian",
+      "emissao": "2024-11-14",
+      "pagamento": "2024-11-14",
+      "vencimento": "2024-11-14",
+      "valorOriginal": "20",
+      "valorPago": "20",
+      "tipoPagamento": "PIX"
+    }
+  ],
+  "fornecedores": [
+    {
+      "id": "1",
+      "nome": "Fornecedor A",
+      "cnpj": "12.345.678/0001-99",
+      "contato": "(11) 91234-5678",
+      "cep": "12345-678",
+      "cidade": "São Paulo",
+      "endereco": "Rua X, 123",
+      "observacoes": "Fornecedor Regular",
+      "status": "Ativo"
+    },
+    {
+      "id": "2",
+      "nome": "Fornecedor B",
+      "cnpj": "98.765.432/0001-11",
+      "contato": "(21) 98765-4321",
+      "cep": "87654-321",
+      "cidade": "Rio de Janeiro",
+      "endereco": "Avenida Y, 456",
+      "observacoes": "Fornecedor Premium",
+      "status": "Ativo"
+    }
+  ],
+  "payables": [
+    {
+      "id": "1",
+      "fornecedor": "Fornecedor A",
+      "emissao": "2024-10-01",
+      "pagamento": "2024-10-05",
+      "vencimento": "2024-10-10",
+      "valorOriginal": "1200",
+      "valorPago": "1200",
+      "tipoPagamento": "Transferência"
+    },
+    {
+      "id": "2",
+      "fornecedor": "Fornecedor B",
+      "emissao": "2024-10-20",
+      "pagamento": "2024-10-25",
+      "vencimento": "2024-11-01",
+      "valorOriginal": "850",
+      "valorPago": "0",
+      "tipoPagamento": "Boleto"
+    },
+    {
+      "id": "3",
+      "fornecedor": "Fornecedor A",
+      "emissao": "2024-11-05",
+      "pagamento": "",
+      "vencimento": "2024-11-15",
+      "valorOriginal": "500",
+      "valorPago": "0",
+      "tipoPagamento": "Cartão de Crédito"
     }
   ]
 }
