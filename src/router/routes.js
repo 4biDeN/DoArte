@@ -30,6 +30,13 @@ const routes = [
     ],
   },
   {
+    path: "/agenda",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      { path: "", component: () => import("src/pages/AgendaPage.vue") },
+    ],
+  },
+  {
     path: "/login",
     component: () => import("pages/loginPage.vue"),
   },
