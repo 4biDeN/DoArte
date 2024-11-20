@@ -6,23 +6,17 @@
         <div class="card-content">
           <!-- Conteúdo específico de cada card -->
           <ul v-if="card.title === 'AGENDA DO DIA'">
-            <li v-for="event in sortedEventsToday" :key="event.id">
+            <li v-for="event in eventsToday" :key="event.id">
               {{ event.cliente }} - {{ event.servico }} -
               {{ formatTime(event["data-hora-inicio"]) }}
             </li>
           </ul>
           <ul v-else-if="card.title === 'ANIVERSARIANTES DO DIA'">
-            <li v-for="cliente in aniversariantes" :key="cliente.id">
+            <li v-for="cliente in aniversariantesHoje" :key="cliente.id">
               {{ cliente.nome }} - {{ cliente.dataNascimento }}
             </li>
           </ul>
-          <div v-else-if="card.title === 'FINANCEIRO'">
-            <div class="chart">Gráfico Financeiro</div>
-            <ul>
-              <li>R$ A RECEBER</li>
-              <li>R$ A PAGAR</li>
-            </ul>
-          </div>
+          <div v-else-if="card.title === 'FINANCEIRO'"></div>
           <ul v-else-if="card.title === 'TOP SERVIÇOS'">
             <li>Serviço 1</li>
             <li>Serviço 2</li>
@@ -36,13 +30,16 @@
 <script>
 import { ref, computed, onMounted } from "vue";
 import { useEventStore } from "../stores/eventos.js";
+import { useClientesStore } from "../stores/clientes.js"; // Importa o store de clientes
 
 export default {
   setup() {
     const eventStore = useEventStore();
+    const clientesStore = useClientesStore(); // Instancia o store de clientes
 
     onMounted(() => {
       eventStore.fetchEvents();
+      clientesStore.getClientes(); // Carrega os clientes
     });
 
     const currentDateISO = ref(new Date().toISOString().split("T")[0]);
@@ -54,21 +51,14 @@ export default {
       );
     });
 
-    const sortedEventsToday = computed(() => {
-      return [...eventsToday.value].sort((a, b) => {
-        return (
-          new Date(a["data-hora-inicio"]) - new Date(b["data-hora-inicio"])
-        );
-      });
-    });
-
     const formatTime = (dateTime) => {
       return dateTime.split(" ")[1].substring(0, 5);
     };
 
     return {
-      sortedEventsToday,
+      eventsToday,
       formatTime,
+      aniversariantesHoje: clientesStore.aniversariantesHoje, // Usa o getter do store de clientes
       cards: [
         { title: "AGENDA DO DIA" },
         { title: "ANIVERSARIANTES DO DIA" },

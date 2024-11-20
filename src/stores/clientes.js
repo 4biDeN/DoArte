@@ -5,6 +5,17 @@ export const useClientesStore = defineStore("clientes", {
   state: () => ({
     listaClientes: [],
   }),
+  getters: {
+    aniversariantesHoje: (state) => {
+      const hoje = new Date();
+      const mes = hoje.getMonth();
+      const dia = hoje.getDate();
+      return state.listaClientes.filter((cliente) => {
+        const [ano, mesCliente, diaCliente] = cliente.dataNascimento.split("-");
+        return parseInt(mesCliente) === mes && parseInt(diaCliente) === dia;
+      });
+    },
+  },
   actions: {
     async getClientes() {
       try {

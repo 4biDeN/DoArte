@@ -34,7 +34,7 @@
       "endereco": "Travessa C, 789",
       "observacoes": "Preferência por contato por email",
       "status": "Ativo",
-      "dataNascimento": "1975-12-30"
+      "dataNascimento": "1975-11-30"
     },
     {
       "id": "4",
@@ -70,7 +70,7 @@
       "endereco": "Avenida Brasil, 1000",
       "observacoes": "Precisa de atendimento personalizado",
       "status": "Inativo",
-      "dataNascimento": "1988-02-25"
+      "dataNascimento": "1988-11-20"
     },
     {
       "id": "7",
@@ -197,30 +197,6 @@
       "tipoPagamento": "PIX"
     }
   ],
-  "fornecedores": [
-    {
-      "id": "1",
-      "nome": "Fornecedor A",
-      "cnpj": "12.345.678/0001-99",
-      "contato": "(11) 91234-5678",
-      "cep": "12345-678",
-      "cidade": "São Paulo",
-      "endereco": "Rua X, 123",
-      "observacoes": "Fornecedor Regular",
-      "status": "Ativo"
-    },
-    {
-      "id": "2",
-      "nome": "Fornecedor B",
-      "cnpj": "98.765.432/0001-11",
-      "contato": "(21) 98765-4321",
-      "cep": "87654-321",
-      "cidade": "Rio de Janeiro",
-      "endereco": "Avenida Y, 456",
-      "observacoes": "Fornecedor Premium",
-      "status": "Ativo"
-    }
-  ],
   "payables": [
     {
       "id": "1",
@@ -257,34 +233,114 @@
     {
       "id": "1",
       "cliente": "João Silva",
-      "data-hora-inicio": "2024-11-19 19:00:00",
-      "data-hora-fim": "2024-11-19 19:20:00",
+      "data-hora-inicio": "2024-11-19T19:00",
+      "data-hora-fim": "2024-11-19T19:20",
       "servico": "Corte e Barba",
-      "status": "novo"
+      "status": "concluído"
     },
     {
       "id": "2",
       "cliente": "Cristian",
-      "data-hora-inicio": "2024-11-19 19:20:00",
-      "data-hora-fim": "2024-11-19 19:40:00",
+      "data-hora-inicio": "2024-11-19T19:20",
+      "data-hora-fim": "2024-11-19T19:40",
       "servico": "Corte e Barba",
       "status": "concluído"
     },
     {
       "id": "3",
       "cliente": "Cristian",
-      "data-hora-inicio": "2024-11-20 19:20:00",
-      "data-hora-fim": "2024-11-20 19:40:00",
+      "data-hora-inicio": "2024-11-20T19:20",
+      "data-hora-fim": "2024-11-20T19:40",
       "servico": "Corte e Barba",
       "status": "concluído"
     },
     {
       "id": "4",
       "cliente": "João Silva",
-      "data-hora-inicio": "2024-11-20 18:20:00",
-      "data-hora-fim": "2024-11-20 18:40:00",
+      "data-hora-inicio": "2024-11-20T18:20",
+      "data-hora-fim": "2024-11-20T18:40",
       "servico": "Corte",
-      "status": "concluído"
+      "status": "novo"
+    },
+    {
+      "id": "5",
+      "cliente": "Ana Paula",
+      "data-hora-inicio": "2024-11-21T10:00",
+      "data-hora-fim": "2024-11-21T10:30",
+      "servico": "Corte",
+      "status": "novo"
+    },
+    {
+      "id": "6",
+      "cliente": "Pedro Santos",
+      "data-hora-inicio": "2024-11-23T14:00",
+      "data-hora-fim": "2024-11-23T14:45",
+      "servico": "Corte de Cabelo",
+      "status": "novo"
+    },
+    {
+      "id": "7",
+      "cliente": "Juliana Souza",
+      "data-hora-inicio": "2024-11-23T11:00",
+      "data-hora-fim": "2024-11-23T11:30",
+      "servico": "Corte de Cabelo",
+      "status": "novo"
+    },
+    {
+      "id": "8",
+      "cliente": "Lucas Almeida",
+      "data-hora-inicio": "2024-11-24T15:00",
+      "data-hora-fim": "2024-11-24T15:45",
+      "servico": "Corte e Barba",
+      "status": "cancelado"
+    },
+    {
+      "id": "9",
+      "cliente": "Fernanda Lima",
+      "data-hora-inicio": "2024-11-25T09:00",
+      "data-hora-fim": "2024-11-25T09:30",
+      "servico": "Coloração",
+      "status": "novo"
+    },
+    {
+      "id": "10",
+      "cliente": "André Costa",
+      "data-hora-inicio": "2024-11-26T16:00",
+      "data-hora-fim": "2024-11-26T16:30",
+      "servico": "Tratamento Capilar",
+      "status": "novo"
+    },
+    {
+      "id": "11",
+      "cliente": "Bianca Torres",
+      "data-hora-inicio": "2024-11-27T13:00",
+      "data-hora-fim": "2024-11-27T13:30",
+      "servico": "Corte de Cabelo",
+      "status": "novo"
+    },
+    {
+      "id": "12",
+      "cliente": "Ricardo Nunes",
+      "data-hora-inicio": "2024-11-28T17:00",
+      "data-hora-fim": "2024-11-28T17:30",
+      "servico": "Barba",
+      "status": "novo"
+    },
+    {
+      "id": "13",
+      "cliente": "Eu",
+      "servico": "Corte",
+      "data-hora-inicio": "2024-11-21T17:00",
+      "data-hora-fim": "2024-11-21T17:30",
+      "status": "novo"
+    },
+    {
+      "id": "3042",
+      "cliente": "Dnv Eu",
+      "servico": "Corte",
+      "data-hora-inicio": "2024-11-20T17:38",
+      "data-hora-fim": "2024-11-20T17:39",
+      "status": "novo"
     }
   ]
 }

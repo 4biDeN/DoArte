@@ -1,5 +1,11 @@
 <template>
   <q-page padding>
+    <q-btn
+      flat
+      label="Adicionar Evento"
+      color="primary"
+      @click="openNewEventDialog"
+    />
     <q-toolbar>
       <q-toolbar-title>Agenda</q-toolbar-title>
     </q-toolbar>
@@ -104,6 +110,54 @@
       </div>
     </div>
 
+    <q-dialog v-model="isNewEventDialogOpen" persistent>
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Novo Evento</div>
+        </q-card-section>
+
+        <q-card-section>
+          <q-form @submit.prevent="addNewEvent">
+            <q-input
+              v-model="newEvent.cliente"
+              label="Cliente"
+              outlined
+              required
+            />
+            <q-input
+              v-model="newEvent.servico"
+              label="Serviço"
+              outlined
+              required
+            />
+            <q-input
+              v-model="newEvent['data-hora-inicio']"
+              label="Data e Hora de Início"
+              type="datetime-local"
+              outlined
+              required
+            />
+            <q-input
+              v-model="newEvent['data-hora-fim']"
+              label="Data e Hora de Fim"
+              type="datetime-local"
+              outlined
+              required
+            />
+          </q-form>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn
+            flat
+            label="Cancelar"
+            color="primary"
+            @click="cancelNewEvent"
+          />
+          <q-btn flat label="Salvar" color="positive" @click="addNewEvent" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <q-dialog v-model="isDialogOpen" persistent>
       <q-card>
         <q-card-section>
@@ -169,7 +223,17 @@ export default {
     const eventStore = useEventStore();
 
     const isDialogOpen = ref(false);
+    const isNewEventDialogOpen = ref(false);
     const selectedEvent = ref({});
+    const newEvent = ref({
+      cliente: "",
+      servico: "",
+      "data-hora-inicio": "",
+      "data-hora-fim": "",
+      status: "novo",
+    });
+
+    const weekdays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
     onMounted(() => {
       eventStore.fetchEvents();
@@ -234,18 +298,18 @@ export default {
 
     const getEventsForDay = (date) => {
       return eventStore.events.filter(
-        (event) => event["data-hora-inicio"].split(" ")[0] === date
+        (event) => event["data-hora-inicio"].split("T")[0] === date
       );
     };
 
     const getEventsForHour = (date, hour) => {
       return eventStore.events.filter((event) => {
-        const eventDate = event["data-hora-inicio"].split(" ")[0];
+        const eventDate = event["data-hora-inicio"].split("T")[0];
         const eventStartHour = event["data-hora-inicio"]
-          .split(" ")[1]
+          .split("T")[1]
           .substring(0, 5);
         const eventEndHour = event["data-hora-fim"]
-          .split(" ")[1]
+          .split("T")[1]
           .substring(0, 5);
 
         // Verifica se o evento começa ou termina dentro da faixa de hora
@@ -256,6 +320,7 @@ export default {
         );
       });
     };
+
     const addOneHour = (hour) => {
       const [h, m] = hour.split(":").map(Number);
       const newHour = h + 1;
@@ -270,6 +335,14 @@ export default {
 
       if (event.status === "concluído") {
         return "event-completed";
+      }
+
+      if (event.status === "cancelado") {
+        return "event-cancelled";
+      }
+
+      if (event.status === "novo") {
+        return "event-new";
       }
 
       if (eventEnd.getTime() < now.getTime() - 60 * 60 * 1000) {
@@ -302,6 +375,31 @@ export default {
         isDialogOpen.value = false;
       } catch (error) {
         console.error("Erro ao concluir o evento:", error);
+      }
+    };
+
+    const openNewEventDialog = () => {
+      isNewEventDialogOpen.value = true;
+    };
+
+    const cancelNewEvent = () => {
+      isNewEventDialogOpen.value = false;
+      newEvent.value = {
+        cliente: "",
+        servico: "",
+        "data-hora-inicio": "",
+        "data-hora-fim": "",
+        status: "novo",
+      };
+    };
+
+    const addNewEvent = async () => {
+      try {
+        await eventStore.addEvent({ ...newEvent.value });
+        isNewEventDialogOpen.value = false;
+        cancelNewEvent(); // Resetar o formulário
+      } catch (error) {
+        console.error("Erro ao adicionar o evento:", error);
       }
     };
 
@@ -359,6 +457,12 @@ export default {
       prevPeriod,
       nextPeriod,
       setViewMode,
+      isNewEventDialogOpen,
+      newEvent,
+      openNewEventDialog,
+      cancelNewEvent,
+      addNewEvent,
+      weekdays,
     };
   },
 };
@@ -377,6 +481,15 @@ export default {
 
 .event-today {
   background-color: #2196f3 !important; /* Azul para eventos do dia */
+  color: white;
+}
+.event-new {
+  background-color: #2196f3 !important; /* Azul para novos */
+  color: white;
+}
+
+.event-cancelled {
+  background-color: #9e9e9e !important; /* Cinza para cancelados */
   color: white;
 }
 
