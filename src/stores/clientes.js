@@ -1,7 +1,7 @@
-import { defineStore } from 'pinia';
-import ClienteService from '../services/clienteService'; // Ajuste o caminho conforme necessário
+import { defineStore } from "pinia";
+import ClienteService from "../services/clienteService";
 
-export const useClientesStore = defineStore('clientes', {
+export const useClientesStore = defineStore("clientes", {
   state: () => ({
     listaClientes: [],
   }),
@@ -24,7 +24,7 @@ export const useClientesStore = defineStore('clientes', {
     async updateCliente(cliente) {
       try {
         const updatedCliente = await ClienteService.updateCliente(cliente);
-        const index = this.listaClientes.findIndex(c => c.id === cliente.id);
+        const index = this.listaClientes.findIndex((c) => c.id === cliente.id);
         if (index !== -1) {
           this.listaClientes[index] = updatedCliente;
         }
@@ -35,7 +35,9 @@ export const useClientesStore = defineStore('clientes', {
     async deleteCliente(clienteId) {
       try {
         await ClienteService.deleteCliente(clienteId);
-        this.listaClientes = this.listaClientes.filter(c => c.id !== clienteId);
+        this.listaClientes = this.listaClientes.filter(
+          (c) => c.id !== clienteId
+        );
       } catch (error) {
         console.error("Erro ao deletar cliente:", error);
       }

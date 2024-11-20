@@ -9,6 +9,15 @@
         color="primary"
         @click="newClient"
       />
+      <q-btn
+        flat
+        round
+        icon="edit"
+        label="Editar Cliente"
+        color="primary"
+        @click="editSelectedClient"
+        :disable="!selectedClient"
+      />
       <div class="search-container">
         <q-input
           outlined
@@ -27,15 +36,47 @@
       </div>
     </div>
 
-    <q-table
-      :rows="clients"
-      :columns="columns"
-      row-key="id"
-      class="client-table"
-      :style="{ backgroundColor: '#201f1c', color: '#ffffff' }"
-      :pagination="pagination"
-      @row-click="editClient"
-    />
+    <div class="client-list">
+      <q-card
+        v-for="client in clients"
+        :key="client.id"
+        class="client-card"
+        @click="selectClient(client)"
+        :class="{ selected: selectedClient && selectedClient.id === client.id }"
+      >
+        <q-card-section>
+          <div class="client-info">
+            <q-checkbox
+              :model-value="selectedClient && selectedClient.id === client.id"
+              @update:model-value="toggleSelection(client)"
+              color="primary"
+            />
+            <div class="client-details">
+              <div class="client-field">
+                <div class="field-label">Nome</div>
+                <div class="field-value">{{ client.nome }}</div>
+              </div>
+              <div class="client-field">
+                <div class="field-label">CPF</div>
+                <div class="field-value">{{ client.cpf }}</div>
+              </div>
+              <div class="client-field">
+                <div class="field-label">Telefone</div>
+                <div class="field-value">{{ client.contato }}</div>
+              </div>
+              <div class="client-field">
+                <div class="field-label">Status</div>
+                <div class="field-value">{{ client.status }}</div>
+              </div>
+              <div class="client-field">
+                <div class="field-label">Nascimento</div>
+                <div class="field-value">{{ client.dataNascimento }}</div>
+              </div>
+            </div>
+          </div>
+        </q-card-section>
+      </q-card>
+    </div>
 
     <!-- Modal para o formulário de cadastro -->
     <q-dialog v-model="showDialog" persistent>
@@ -110,15 +151,15 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
+import ClienteService from "../services/clienteService";
 
 const showDialog = ref(false);
 const isEditing = ref(false);
 const search = ref("");
-const pagination = ref({ page: 1, rowsPerPage: 5 });
 const clients = ref([]);
+const selectedClient = ref(null);
 const formData = ref({
-  id: null,
+  id: "",
   nome: "",
   cpf: "",
   contato: "",
@@ -130,40 +171,10 @@ const formData = ref({
   dataNascimento: "",
 });
 
-// Configura as colunas para exibição
-const columns = [
-  { name: "nome", label: "Nome", align: "left", field: (row) => row.nome },
-  {
-    name: "cpf",
-    label: "Documento",
-    align: "left",
-    field: (row) => row.cpf,
-  },
-  {
-    name: "contato",
-    label: "Telefone",
-    align: "left",
-    field: (row) => row.contato,
-  },
-  {
-    name: "status",
-    label: "Status",
-    align: "left",
-    field: (row) => row.status,
-  },
-  {
-    name: "dataNascimento",
-    label: "Data de Nascimento",
-    align: "left",
-    field: (row) => row.dataNascimento,
-  },
-];
-
 // Função para buscar os clientes do servidor
 const fetchClients = async () => {
   try {
-    const response = await axios.get("http://localhost:3000/clientes");
-    clients.value = response.data;
+    clients.value = await ClienteService.getClientes();
   } catch (error) {
     console.error("Erro ao buscar clientes:", error);
   }
@@ -175,30 +186,29 @@ const newClient = () => {
   showDialog.value = true;
 };
 
-const editClient = async (client) => {
-  let id = client.id;
-  console.log(id);
-  try {
-    const response = await axios.get(`http://localhost:3000/clientes/${id}`);
+const editSelectedClient = () => {
+  if (selectedClient.value) {
+    editClient(selectedClient.value);
+  }
+};
 
-    formData.value = response.data; // Preenche o formulário com os dados retornados
+const editClient = async (client) => {
+  try {
+    const clientData = await ClienteService.getClienteById(client.id);
+    formData.value = clientData;
     isEditing.value = true;
-    showDialog.value = true; // Abre o modal para edição
+    showDialog.value = true;
   } catch (error) {
     console.error("Erro ao buscar dados do cliente:", error);
   }
 };
 
-// Função para salvar o cliente no JSON-Server
 const saveClient = async () => {
   try {
     if (isEditing.value) {
-      await axios.put(
-        `http://localhost:3000/clientes/${formData.value.id}`,
-        formData.value
-      );
+      await ClienteService.updateCliente(formData.value);
     } else {
-      await axios.post("http://localhost:3000/clientes", formData.value);
+      await ClienteService.addCliente(formData.value);
     }
     showDialog.value = false;
     resetForm();
@@ -208,7 +218,6 @@ const saveClient = async () => {
   }
 };
 
-// Função para limpar o formulário após salvar
 const resetForm = () => {
   formData.value = {
     id: null,
@@ -222,16 +231,13 @@ const resetForm = () => {
     status: "",
     dataNascimento: "",
   };
+  selectedClient.value = null;
 };
 
-// Função de busca (a ser implementada)
 const performSearch = () => {
-  // Verifica se há algum termo de busca
   if (search.value.trim() === "") {
-    // Se a busca estiver vazia, exibe todos os clientes
     fetchClients();
   } else {
-    // Filtra os clientes com base no nome, cpf ou cidade
     const filteredClients = clients.value.filter((client) => {
       const searchTerm = search.value.toLowerCase();
       return (
@@ -240,11 +246,22 @@ const performSearch = () => {
         client.cidade.toLowerCase().includes(searchTerm)
       );
     });
-    clients.value = filteredClients; // Atualiza a lista de clientes exibidos
+    clients.value = filteredClients;
   }
 };
 
-// Chama fetchClients ao montar o componente
+const selectClient = (client) => {
+  selectedClient.value = client;
+};
+
+const toggleSelection = (client) => {
+  if (selectedClient.value && selectedClient.value.id === client.id) {
+    selectedClient.value = null; // Deselect if already selected
+  } else {
+    selectedClient.value = client; // Select the clicked client
+  }
+};
+
 onMounted(fetchClients);
 </script>
 
@@ -268,16 +285,16 @@ onMounted(fetchClients);
   display: flex;
   align-items: center;
 }
+
 .client-form {
   background-color: #3b3734;
 }
 
 .white-text-input .q-field__native {
-  color: white; /* Torna o texto do input branco */
-  caret-color: white; /* Torna o cursor branco */
+  color: white;
+  caret-color: white;
 }
 
-/* Para garantir que o placeholder e o texto digitado sejam brancos */
 .white-text-input .q-field__control {
   color: white;
 }
@@ -298,7 +315,7 @@ onMounted(fetchClients);
 }
 
 .search-input .q-field__native {
-  color: white; /* Define a cor do texto do input */
+  color: white;
 }
 
 .search-input {
@@ -311,25 +328,49 @@ onMounted(fetchClients);
   height: 40px;
 }
 
-.client-table {
+.client-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.client-card {
   background-color: #201f1c;
   color: #ffffff;
-  flex-grow: 1;
-}
-
-.client-table th,
-.client-table td {
-  color: #ffffff;
-}
-
-.status-nascimento {
+  cursor: pointer;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
 }
 
-.buttons {
+.client-card.selected {
+  border: 2px solid #ffffff;
+}
+
+.client-info {
   display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+  align-items: center;
+  gap: 10px;
+}
+
+.client-details {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+
+.client-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.field-label {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.field-value {
+  font-size: 14px;
 }
 </style>

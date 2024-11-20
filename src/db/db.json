@@ -10,7 +10,7 @@
       "endereco": "Rua A, 123",
       "observacoes": "Cliente",
       "status": "Ativo",
-      "dataNascimento": "1985-07-20"
+      "dataNascimento": "1985-11-20"
     },
     {
       "id": "2",
@@ -47,6 +47,102 @@
       "observacoes": "Teste",
       "status": "Ativo",
       "dataNascimento": "2002-04-11"
+    },
+    {
+      "id": "5",
+      "nome": "Ana Paula",
+      "cpf": "222.333.444-55",
+      "contato": "(47) 99988-7766",
+      "cep": "89012-345",
+      "cidade": "Blumenau",
+      "endereco": "Rua das Flores, 50",
+      "observacoes": "Cliente frequente",
+      "status": "Ativo",
+      "dataNascimento": "1995-09-10"
+    },
+    {
+      "id": "6",
+      "nome": "Pedro Santos",
+      "cpf": "333.444.555-66",
+      "contato": "(41) 99887-6655",
+      "cep": "80230-040",
+      "cidade": "Curitiba",
+      "endereco": "Avenida Brasil, 1000",
+      "observacoes": "Precisa de atendimento personalizado",
+      "status": "Inativo",
+      "dataNascimento": "1988-02-25"
+    },
+    {
+      "id": "7",
+      "nome": "Juliana Souza",
+      "cpf": "444.555.666-77",
+      "contato": "(48) 98444-5566",
+      "cep": "88010-123",
+      "cidade": "Florianópolis",
+      "endereco": "Praça XV, 123",
+      "observacoes": "Cliente VIP",
+      "status": "Ativo",
+      "dataNascimento": "1993-08-05"
+    },
+    {
+      "id": "8",
+      "nome": "Lucas Almeida",
+      "cpf": "555.666.777-88",
+      "contato": "(35) 98777-6543",
+      "cep": "37100-000",
+      "cidade": "Varginha",
+      "endereco": "Rua do Sol, 300",
+      "observacoes": "Novo cliente",
+      "status": "Ativo",
+      "dataNascimento": "2000-06-20"
+    },
+    {
+      "id": "9",
+      "nome": "Fernanda Lima",
+      "cpf": "666.777.888-99",
+      "contato": "(51) 98765-6789",
+      "cep": "90010-300",
+      "cidade": "Porto Alegre",
+      "endereco": "Rua da Praia, 45",
+      "observacoes": "Cliente VIP",
+      "status": "Ativo",
+      "dataNascimento": "1980-01-12"
+    },
+    {
+      "id": "10",
+      "nome": "André Costa",
+      "cpf": "777.888.999-00",
+      "contato": "(71) 99999-8888",
+      "cep": "40020-000",
+      "cidade": "Salvador",
+      "endereco": "Largo do Pelourinho, 10",
+      "observacoes": "Cliente regular",
+      "status": "Ativo",
+      "dataNascimento": "1992-11-18"
+    },
+    {
+      "id": "11",
+      "nome": "Bianca Torres",
+      "cpf": "888.999.000-11",
+      "contato": "(62) 91234-5678",
+      "cep": "74000-000",
+      "cidade": "Goiânia",
+      "endereco": "Avenida Goiás, 500",
+      "observacoes": "Foco em atendimento rápido",
+      "status": "Ativo",
+      "dataNascimento": "1997-04-23"
+    },
+    {
+      "id": "12",
+      "nome": "Ricardo Nunes",
+      "cpf": "999.000.111-22",
+      "contato": "(31) 99876-5432",
+      "cep": "30190-000",
+      "cidade": "Belo Horizonte",
+      "endereco": "Rua Contorno, 800",
+      "observacoes": "Atendimento noturno preferencial",
+      "status": "Inativo",
+      "dataNascimento": "1982-07-08"
     }
   ],
   "receivables": [
@@ -172,6 +268,22 @@
       "data-hora-inicio": "2024-11-19 19:20:00",
       "data-hora-fim": "2024-11-19 19:40:00",
       "servico": "Corte e Barba",
+      "status": "concluído"
+    },
+    {
+      "id": "3",
+      "cliente": "Cristian",
+      "data-hora-inicio": "2024-11-20 19:20:00",
+      "data-hora-fim": "2024-11-20 19:40:00",
+      "servico": "Corte e Barba",
+      "status": "concluído"
+    },
+    {
+      "id": "4",
+      "cliente": "João Silva",
+      "data-hora-inicio": "2024-11-20 18:20:00",
+      "data-hora-fim": "2024-11-20 18:40:00",
+      "servico": "Corte",
       "status": "concluído"
     }
   ]
