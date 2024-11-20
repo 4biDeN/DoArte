@@ -2,7 +2,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 
-export const useAgendaStore = defineStore("agenda", {
+export const useEventStore = defineStore("agenda", {
   state: () => ({
     events: [],
   }),

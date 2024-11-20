@@ -21,6 +21,7 @@
               outlined
               dense
               class="input-spacing large-input"
+              @keyup.enter="submitLogin"
             />
             <q-btn
               label="Login"
@@ -30,7 +31,7 @@
             />
           </div>
           <div class="branding">
-            <img src="../assets/muller-cj.png" alt="Muller CJ logo" />
+            <img src="../assets/muller-cj-invert.png" alt="Muller CJ logo" />
           </div>
         </div>
       </q-page>

@@ -149,19 +149,12 @@
   ],
   "events": [
     {
-      "id": 1,
-      "title": "Evento 1",
-      "date": "2024-01-01"
-    },
-    {
-      "id": 2,
-      "title": "Evento 2",
-      "date": "2024-01-02"
-    },
-    {
-      "id": "4dc6",
-      "title": "1",
-      "date": "2024-11-14"
+      "id": "1",
+      "cliente": "João Silva",
+      "data-hora-inicio": "2024-11-19 19:00:00",
+      "data-hora-fim": "2024-11-19 19:40:00",
+      "servico": "Corte e Barba",
+      "status": "concluído"
     }
   ]
 }
