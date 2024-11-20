@@ -27,4 +27,17 @@ export default {
     const response = await axios.delete(`${API_URL}/${id}`);
     return response.data;
   },
+
+  async getAniversariantesHoje() {
+    const response = await axios.get(API_URL);
+    const clientes = response.data;
+    const hoje = new Date();
+    const diaAtual = hoje.getDate();
+    const mesAtual = hoje.getMonth() + 1; // Janeiro é 0!
+
+    return clientes.filter((cliente) => {
+      const [ano, mes, dia] = cliente.dataNascimento.split("-");
+      return parseInt(dia) === diaAtual && parseInt(mes) === mesAtual;
+    });
+  },
 };

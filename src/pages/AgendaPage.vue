@@ -6,9 +6,6 @@
       color="primary"
       @click="openNewEventDialog"
     />
-    <q-toolbar>
-      <q-toolbar-title>Agenda</q-toolbar-title>
-    </q-toolbar>
 
     <div class="calendar-controls">
       <q-btn flat icon="arrow_back" @click="prevPeriod" />

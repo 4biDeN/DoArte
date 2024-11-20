@@ -4,18 +4,8 @@ import ClienteService from "../services/clienteService";
 export const useClientesStore = defineStore("clientes", {
   state: () => ({
     listaClientes: [],
+    aniversariantesHoje: [],
   }),
-  getters: {
-    aniversariantesHoje: (state) => {
-      const hoje = new Date();
-      const mes = hoje.getMonth();
-      const dia = hoje.getDate();
-      return state.listaClientes.filter((cliente) => {
-        const [ano, mesCliente, diaCliente] = cliente.dataNascimento.split("-");
-        return parseInt(mesCliente) === mes && parseInt(diaCliente) === dia;
-      });
-    },
-  },
   actions: {
     async getClientes() {
       try {
@@ -51,6 +41,14 @@ export const useClientesStore = defineStore("clientes", {
         );
       } catch (error) {
         console.error("Erro ao deletar cliente:", error);
+      }
+    },
+    async getAniversariantesHoje() {
+      try {
+        this.aniversariantesHoje =
+          await ClienteService.getAniversariantesHoje();
+      } catch (error) {
+        console.error("Erro ao buscar aniversariantes do dia:", error);
       }
     },
   },

@@ -40,6 +40,7 @@ export default {
     onMounted(() => {
       eventStore.fetchEvents();
       clientesStore.getClientes(); // Carrega os clientes
+      clientesStore.getAniversariantesHoje(); // Carrega os aniversariantes do dia
     });
 
     const currentDateISO = ref(new Date().toISOString().split("T")[0]);
@@ -47,18 +48,22 @@ export default {
     const eventsToday = computed(() => {
       return eventStore.events.filter(
         (event) =>
-          event["data-hora-inicio"].split(" ")[0] === currentDateISO.value
+          event["data-hora-inicio"].split("T")[0] === currentDateISO.value
       );
     });
 
+    const aniversariantesHoje = computed(() => {
+      return clientesStore.aniversariantesHoje;
+    });
+
     const formatTime = (dateTime) => {
-      return dateTime.split(" ")[1].substring(0, 5);
+      return dateTime.split("T")[1].substring(0, 5);
     };
 
     return {
       eventsToday,
       formatTime,
-      aniversariantesHoje: clientesStore.aniversariantesHoje, // Usa o getter do store de clientes
+      aniversariantesHoje,
       cards: [
         { title: "AGENDA DO DIA" },
         { title: "ANIVERSARIANTES DO DIA" },
