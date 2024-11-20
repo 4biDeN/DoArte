@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import axios from "axios";
+import ContaService from "../services/contaService";
 
 export const useContasStore = defineStore("contas", {
   state: () => ({
@@ -7,11 +7,19 @@ export const useContasStore = defineStore("contas", {
   }),
   actions: {
     async fetchContas() {
-      const response = await axios.get("http://localhost:3000/financeiro");
-      this.contas = response.data;
+      try {
+        this.contas = await ContaService.fetchContas();
+      } catch (error) {
+        console.error("Erro ao buscar contas:", error);
+      }
     },
-    addConta(conta) {
-      this.contas.push(conta);
+    async addConta(conta) {
+      try {
+        const newConta = await ContaService.addConta(conta);
+        this.contas.push(newConta);
+      } catch (error) {
+        console.error("Erro ao adicionar conta:", error);
+      }
     },
   },
 });

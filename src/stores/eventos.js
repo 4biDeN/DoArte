@@ -1,6 +1,5 @@
-// src/stores/agendaStore.js
 import { defineStore } from "pinia";
-import axios from "axios";
+import EventService from "../services/eventService";
 
 export const useEventStore = defineStore("agenda", {
   state: () => ({
@@ -9,22 +8,30 @@ export const useEventStore = defineStore("agenda", {
   actions: {
     async fetchEvents() {
       try {
-        // Supondo que o json-server esteja rodando na porta 3000
-        const response = await axios.get("http://localhost:3000/events");
-        this.events = response.data;
+        this.events = await EventService.fetchEvents();
       } catch (error) {
         console.error("Erro ao buscar eventos:", error);
       }
     },
     async addEvent(event) {
       try {
-        const response = await axios.post(
-          "http://localhost:3000/events",
-          event
-        );
-        this.events.push(response.data);
+        const newEvent = await EventService.addEvent(event);
+        this.events.push(newEvent);
       } catch (error) {
         console.error("Erro ao adicionar evento:", error);
+      }
+    },
+    async updateEvent(updatedEvent) {
+      try {
+        const updated = await EventService.updateEvent(updatedEvent);
+        const index = this.events.findIndex(
+          (event) => event.id === updatedEvent.id
+        );
+        if (index !== -1) {
+          this.events[index] = updated;
+        }
+      } catch (error) {
+        console.error("Erro ao atualizar evento:", error);
       }
     },
   },

@@ -5,9 +5,9 @@
     </q-toolbar>
 
     <div class="calendar-controls">
-      <q-btn flat icon="arrow_back" @click="prevMonth" />
-      <div class="month-title">{{ formattedMonth }}</div>
-      <q-btn flat icon="arrow_forward" @click="nextMonth" />
+      <q-btn flat icon="arrow_back" @click="prevPeriod" />
+      <div class="month-title">{{ formattedPeriod }}</div>
+      <q-btn flat icon="arrow_forward" @click="nextPeriod" />
     </div>
 
     <div class="view-switcher">
@@ -42,6 +42,57 @@
           <div class="events-container">
             <q-btn
               v-for="(event, idx) in getEventsForDay(day.date)"
+              :key="idx"
+              :label="event.servico"
+              :class="getEventClass(event)"
+              dense
+              @click="openEventDialog(event)"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="viewMode === 'week'" class="week-view-container">
+      <div class="hour-labels">
+        <div v-for="hour in hours" :key="hour" class="hour-label">
+          {{ hour }}
+        </div>
+      </div>
+      <div class="week-grid">
+        <div
+          v-for="(day, index) in daysInWeek"
+          :key="index"
+          class="week-day-column"
+        >
+          <div class="date-header">{{ day.day }}</div>
+          <div v-for="hour in hours" :key="hour" class="hour-slot">
+            <div class="events-container">
+              <q-btn
+                v-for="(event, idx) in getEventsForHour(day.date, hour)"
+                :key="idx"
+                :label="event.servico"
+                :class="getEventClass(event)"
+                dense
+                @click="openEventDialog(event)"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="viewMode === 'day'" class="day-view-container">
+      <div class="hour-labels">
+        <div v-for="hour in hours" :key="hour" class="hour-label">
+          {{ hour }}
+        </div>
+      </div>
+      <div class="day-column">
+        <div v-for="hour in hours" :key="hour" class="hour-slot">
+          <div class="events-container">
+            <q-btn
+              v-for="(event, idx) in getEventsForHour(currentDateISO, hour)"
               :key="idx"
               :label="event.servico"
               :class="getEventClass(event)"
@@ -124,12 +175,31 @@ export default {
       eventStore.fetchEvents();
     });
 
-    const formattedMonth = computed(() =>
-      currentDate.value.toLocaleString("pt-BR", {
-        month: "long",
-        year: "numeric",
-      })
-    );
+    const hours = Array.from({ length: 16 }, (_, i) => `${7 + i}:00`);
+
+    const currentDateISO = computed(() => {
+      return currentDate.value.toISOString().split("T")[0];
+    });
+
+    const formattedPeriod = computed(() => {
+      if (viewMode.value === "month") {
+        return currentDate.value.toLocaleString("pt-BR", {
+          month: "long",
+          year: "numeric",
+        });
+      } else if (viewMode.value === "week") {
+        const startOfWeek = new Date(currentDate.value);
+        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(endOfWeek.getDate() + 6);
+        return `${startOfWeek.toLocaleDateString(
+          "pt-BR"
+        )} - ${endOfWeek.toLocaleDateString("pt-BR")}`;
+      } else if (viewMode.value === "day") {
+        return currentDate.value.toLocaleDateString("pt-BR");
+      }
+      return "";
+    });
 
     const daysInMonth = computed(() => {
       const days = [];
@@ -147,10 +217,51 @@ export default {
       return days;
     });
 
+    const daysInWeek = computed(() => {
+      const days = [];
+      const startOfWeek = new Date(currentDate.value);
+      startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+      for (let i = 0; i < 7; i++) {
+        const day = new Date(startOfWeek);
+        day.setDate(startOfWeek.getDate() + i);
+        days.push({
+          date: day.toISOString().split("T")[0],
+          day: day.getDate(),
+        });
+      }
+      return days;
+    });
+
     const getEventsForDay = (date) => {
       return eventStore.events.filter(
         (event) => event["data-hora-inicio"].split(" ")[0] === date
       );
+    };
+
+    const getEventsForHour = (date, hour) => {
+      return eventStore.events.filter((event) => {
+        const eventDate = event["data-hora-inicio"].split(" ")[0];
+        const eventStartHour = event["data-hora-inicio"]
+          .split(" ")[1]
+          .substring(0, 5);
+        const eventEndHour = event["data-hora-fim"]
+          .split(" ")[1]
+          .substring(0, 5);
+
+        // Verifica se o evento começa ou termina dentro da faixa de hora
+        return (
+          eventDate === date &&
+          ((eventStartHour >= hour && eventStartHour < addOneHour(hour)) ||
+            (eventEndHour > hour && eventEndHour <= addOneHour(hour)))
+        );
+      });
+    };
+    const addOneHour = (hour) => {
+      const [h, m] = hour.split(":").map(Number);
+      const newHour = h + 1;
+      return `${newHour < 10 ? "0" + newHour : newHour}:${
+        m < 10 ? "0" + m : m
+      }`;
     };
 
     const getEventClass = (event) => {
@@ -176,6 +287,7 @@ export default {
     };
 
     const openEventDialog = (event) => {
+      console.log("Evento selecionado:", event);
       selectedEvent.value = { ...event };
       isDialogOpen.value = true;
     };
@@ -193,16 +305,36 @@ export default {
       }
     };
 
-    const prevMonth = () => {
-      const date = new Date(currentDate.value);
-      date.setMonth(date.getMonth() - 1);
-      currentDate.value = date;
+    const prevPeriod = () => {
+      if (viewMode.value === "month") {
+        const date = new Date(currentDate.value);
+        date.setMonth(date.getMonth() - 1);
+        currentDate.value = date;
+      } else if (viewMode.value === "week") {
+        const date = new Date(currentDate.value);
+        date.setDate(date.getDate() - 7);
+        currentDate.value = date;
+      } else if (viewMode.value === "day") {
+        const date = new Date(currentDate.value);
+        date.setDate(date.getDate() - 1);
+        currentDate.value = date;
+      }
     };
 
-    const nextMonth = () => {
-      const date = new Date(currentDate.value);
-      date.setMonth(date.getMonth() + 1);
-      currentDate.value = date;
+    const nextPeriod = () => {
+      if (viewMode.value === "month") {
+        const date = new Date(currentDate.value);
+        date.setMonth(date.getMonth() + 1);
+        currentDate.value = date;
+      } else if (viewMode.value === "week") {
+        const date = new Date(currentDate.value);
+        date.setDate(date.getDate() + 7);
+        currentDate.value = date;
+      } else if (viewMode.value === "day") {
+        const date = new Date(currentDate.value);
+        date.setDate(date.getDate() + 1);
+        currentDate.value = date;
+      }
     };
 
     const setViewMode = (mode) => {
@@ -211,17 +343,21 @@ export default {
 
     return {
       currentDate,
-      formattedMonth,
+      currentDateISO,
+      formattedPeriod,
       daysInMonth,
+      daysInWeek,
+      hours,
       viewMode,
       getEventsForDay,
+      getEventsForHour,
       getEventClass,
       isDialogOpen,
       selectedEvent,
       openEventDialog,
       concluirEvento,
-      prevMonth,
-      nextMonth,
+      prevPeriod,
+      nextPeriod,
       setViewMode,
     };
   },
@@ -275,7 +411,7 @@ export default {
   background-color: #2b2a27;
   border: 1px solid #3c3c3a;
   border-radius: 8px;
-  min-height: 120px;
+  min-height: 150px;
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -283,18 +419,87 @@ export default {
 }
 
 .date-header {
+  background-color: #2b2a27;
+  padding: 5px;
+  text-align: center;
   font-weight: bold;
-  margin-bottom: 5px;
-  font-size: 1.2rem;
+  border-bottom: 1px solid #3c3c3a;
 }
 
 .events-container {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  width: 90%; /* Permitir que os eventos ocupem toda a largura disponível */
 }
 
 .event-btn {
   font-size: 0.9rem;
+}
+
+.week-view-container {
+  display: flex;
+}
+
+.hour-slot {
+  min-height: 60px;
+  border-bottom: 1px dashed #3c3c3a;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: relative;
+  padding: 5px;
+}
+
+.hour-labels {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-right: 10px;
+}
+
+.hour-label {
+  height: 60px;
+  line-height: 60px;
+  font-weight: bold;
+  color: white;
+  border-bottom: 1px dashed #3c3c3a; /* Linha pontilhada */
+}
+
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  flex-grow: 1;
+  border-left: 1px dashed #3c3c3a; /* Linha pontilhada à esquerda */
+}
+
+.week-day-column {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px dashed #3c3c3a;
+  padding: 5px; /* Adicionando padding para espaçamento */
+  width: 100%;
+}
+
+.day-view-container {
+  display: flex;
+}
+
+.day-column {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  border-left: 1px dashed #3c3c3a; /* Linha pontilhada à esquerda */
+}
+
+.hour-slot {
+  height: 60px;
+  border-bottom: 1px dashed #3c3c3a; /* Linha pontilhada */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 </style>

@@ -176,15 +176,16 @@ const newClient = () => {
 };
 
 const editClient = async (client) => {
+  let id = client.id;
+  console.log(id);
   try {
-    const response = await axios.get(`http://localhost:3000/clientes/${1}`);
+    const response = await axios.get(`http://localhost:3000/clientes/${id}`);
 
     formData.value = response.data; // Preenche o formulário com os dados retornados
     isEditing.value = true;
     showDialog.value = true; // Abre o modal para edição
   } catch (error) {
     console.error("Erro ao buscar dados do cliente:", error);
-    alert("Cliente não encontrado. Verifique o ID e tente novamente.");
   }
 };
 

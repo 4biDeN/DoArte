@@ -89,6 +89,16 @@
       "valorOriginal": "20",
       "valorPago": "20",
       "tipoPagamento": "PIX"
+    },
+    {
+      "id": 5,
+      "cliente": "Mila",
+      "emissao": "2024-11-20",
+      "pagamento": "2024-11-20",
+      "vencimento": "2024-11-20",
+      "valorOriginal": "10",
+      "valorPago": "0",
+      "tipoPagamento": "PIX"
     }
   ],
   "fornecedores": [
@@ -152,6 +162,14 @@
       "id": "1",
       "cliente": "João Silva",
       "data-hora-inicio": "2024-11-19 19:00:00",
+      "data-hora-fim": "2024-11-19 19:20:00",
+      "servico": "Corte e Barba",
+      "status": "novo"
+    },
+    {
+      "id": "2",
+      "cliente": "Cristian",
+      "data-hora-inicio": "2024-11-19 19:20:00",
       "data-hora-fim": "2024-11-19 19:40:00",
       "servico": "Corte e Barba",
       "status": "concluído"
