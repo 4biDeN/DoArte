@@ -1,41 +1,6 @@
 # Quasar App (doarte-barber)
 
-A Quasar Project
+Este projeto foi desenvolvido utilizando-se como base de dados o JSON Server
+Utilizado a Framework do Quasar para o frontend, além de outros como axios e Pinia
 
-## Install the dependencies
-```bash
-yarn
-# or
-npm install
-```
-
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
-quasar dev
-```
-
-
-### Lint the files
-```bash
-yarn lint
-# or
-npm run lint
-```
-
-
-### Format the files
-```bash
-yarn format
-# or
-npm run format
-```
-
-
-
-### Build the app for production
-```bash
-quasar build
-```
-
-### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+Trata-se de um app web para o contorle dos agendamentos de uma barbearia, sendo este o controle apenas do gestor.
